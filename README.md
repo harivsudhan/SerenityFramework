@@ -1,2 +1,2 @@
 # SerenityFramework
-Serenity Cucumber Framework with Gradle
+Serenity Cucumber Framework with Maven
