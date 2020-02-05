@@ -1,5 +1,4 @@
-Feature: Angular BrandStory
-  Sample feature to test Angular7
+Feature: Angular BrandStory-Sample feature to test Angular7
 
   Background: launch the BrandStory application
     Given I navigate to BrandStory Page
