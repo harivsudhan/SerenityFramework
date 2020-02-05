@@ -1,7 +1,6 @@
 package com.taf.pages;
 
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.Select;
 
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.PageObject;
@@ -16,7 +15,7 @@ public class ProductPage extends PageObject {
 	WebElementFacade searchField;
 	
 	@FindBy(xpath = "//a[contains(text() , 'blue denim super oversized')]")
-	WebElementFacade productLink;
+	WebElementFacade denimProductLink;
 	
 	@FindBy(id = "pa_color")
 	WebElementFacade productColorDropdown;
@@ -36,19 +35,20 @@ public class ProductPage extends PageObject {
 		searchField.submit();
 	}
 	
+	
+	
 	public void clickProduct(String productName) {
-		productLink.waitUntilEnabled();
-		actions = new Actions(getDriver());
-		actions.moveToElement(productLink);
-		actions.perform();
-		productLink.click();	
+			denimProductLink.waitUntilEnabled();
+			actions = new Actions(getDriver());
+			actions.moveToElement(denimProductLink);
+			actions.perform();
+			denimProductLink.click();	
 		waitForTextToAppear(productName);
 	}
 	
 	public void selectColordropdown(String productColor) {
 		productColorDropdown.waitUntilEnabled();
-		Select color = new Select(productColorDropdown);
-		color.selectByValue(productColor);
+		element(productColorDropdown).selectByValue(productColor);
 	}
 	
 	public void selectSizedropdown(String productSize) {
