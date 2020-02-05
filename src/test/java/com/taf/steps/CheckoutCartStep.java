@@ -20,7 +20,7 @@ public class CheckoutCartStep {
 
 	@When("^I submit username and password$")
 	public void i_submit_username_and_password() {
-		shopHomePage.loginPage("harivsudhan", "Welcometoshop");
+		shopHomePage.loginPage();
 	}
 
 	@Then("^I should be logged in to \"([^\"]*)\"$")

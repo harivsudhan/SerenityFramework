@@ -2,6 +2,8 @@ package com.taf.pages;
 
 import org.openqa.selenium.By;
 
+import com.taf.utils.ConfigProperties;
+
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
@@ -38,10 +40,10 @@ public class HomePage extends PageObject {
 		getJavascriptExecutorFacade().executeScript("window.scrollBy(0,200)");
 	}
 
-	public void loginPage(String userName, String password) {
+	public void loginPage() {
 		myAccountLink.waitUntilClickable().click();
-		shopUsername.waitUntilVisible().sendKeys(userName);
-		shopPassword.waitUntilEnabled().sendKeys(password);
+		shopUsername.waitUntilVisible().sendKeys(ConfigProperties.getInstance().getShopCartUsername());
+		shopPassword.waitUntilEnabled().sendKeys(ConfigProperties.getInstance().getShopCartPassowrd());
 		loginButton.waitUntilEnabled().click();
 	}
 	
