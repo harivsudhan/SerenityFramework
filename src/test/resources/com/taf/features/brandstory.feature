@@ -14,4 +14,4 @@ Feature: Angular BrandStory-Sample feature to test Angular7
       | Product          | Display                    |
       | ATI Technologies | ATI Technologies Portfolio |
       | Vymo             | Vymo Portfolio             |
-      | Arpedio					 | Arpedia Portfolio					|
+      #| Arpedio					 | Arpedia Portfolio					|
