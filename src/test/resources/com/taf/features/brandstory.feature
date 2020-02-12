@@ -1,4 +1,3 @@
-@regression
 Feature: Angular BrandStory-Sample feature to test Angular7
 
   Background: launch the BrandStory application
