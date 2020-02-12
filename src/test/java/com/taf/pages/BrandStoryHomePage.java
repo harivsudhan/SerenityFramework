@@ -3,6 +3,8 @@ package com.taf.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
+import com.taf.core.BasePageObject;
+
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.PageObject;
@@ -10,7 +12,7 @@ import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.DefaultUrl;
 
 @DefaultUrl("https://brandstory.in/")
-public class BrandStoryHomePage extends PageObject {
+public class BrandStoryHomePage extends BasePageObject {
 
 	@FindBy(tagName = "body")
 	WebElementFacade brandHomePage;
@@ -33,7 +35,7 @@ public class BrandStoryHomePage extends PageObject {
 	private String projectLink = "//*[text() = 'ProjectLink']";
 
 	public void waitUntilBrandStoryLoads() {
-		getDriver().manage().window().maximize();
+		maximizeWindow();
 		this.open();
 		waitForCondition().until(ExpectedConditions.visibilityOfAllElements(brandHomePage));
 		waitForCondition().until(ExpectedConditions.visibilityOf(contactUsLink));
@@ -54,7 +56,7 @@ public class BrandStoryHomePage extends PageObject {
 		projectLink = projectLink.replace("ProjectLink", projectName);
 		System.out.println("The project link is " + projectLink);
 		WebElementFacade projectLinkElement = element(By.xpath(projectLink));
-		getJavascriptExecutorFacade().executeScript("scroll(0, 2000);");
+		scrollDown(2000);
 		waitForCondition().until(ExpectedConditions.visibilityOf(projectLinkElement));
 		Serenity.takeScreenshot();
 		projectLinkElement.click();

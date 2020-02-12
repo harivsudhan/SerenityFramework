@@ -32,7 +32,7 @@
 	<classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-classic/1.0.13/logback-classic-1.0.13.jar" sourcepath="M2_REPO/ch/qos/logback/logback-classic/1.0.13/logback-classic-1.0.13-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/ch/qos/logback/logback-core/1.0.13/logback-core-1.0.13.jar" sourcepath="M2_REPO/ch/qos/logback/logback-core/1.0.13/logback-core-1.0.13-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5.jar" sourcepath="M2_REPO/org/slf4j/slf4j-api/1.7.5/slf4j-api-1.7.5-sources.jar"/>
-	<classpathentry kind="var" path="M2_REPO/net/serenity-bdd/serenity-core/2.1.4/serenity-core-2.1.4.jar"/>
+	<classpathentry kind="var" path="M2_REPO/net/serenity-bdd/serenity-core/2.1.4/serenity-core-2.1.4.jar" sourcepath="/SERENITY_REPO"/>
 	<classpathentry kind="var" path="M2_REPO/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1.jar" sourcepath="M2_REPO/net/bytebuddy/byte-buddy/1.10.1/byte-buddy-1.10.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1.jar" sourcepath="M2_REPO/net/bytebuddy/byte-buddy-agent/1.10.1/byte-buddy-agent-1.10.1-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/google/guava/guava/25.0-jre/guava-25.0-jre.jar" sourcepath="M2_REPO/com/google/guava/guava/25.0-jre/guava-25.0-jre-sources.jar"/>

@@ -1,4 +1,4 @@
-package com.taf.utils;
+package com.taf.core;
 
 import java.io.FileInputStream;
 import java.text.DateFormat;

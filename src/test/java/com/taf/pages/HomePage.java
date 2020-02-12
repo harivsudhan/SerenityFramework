@@ -2,15 +2,15 @@ package com.taf.pages;
 
 import org.openqa.selenium.By;
 
+import com.taf.core.BasePageObject;
 import com.taf.utils.ConfigProperties;
 
 import net.serenitybdd.core.annotations.findby.FindBy;
-import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.DefaultUrl;
 
 @DefaultUrl("http://shop.demoqa.com")
-public class HomePage extends PageObject {
+public class HomePage extends BasePageObject {
 
 	private By shopHomePage = By.id("noo-site");
 	
@@ -33,11 +33,11 @@ public class HomePage extends PageObject {
 	WebElementFacade searchField;
 	
 	public void waitUntilPageIsLoaded() {
-		getDriver().manage().window().maximize();
+		maximizeWindow();
 		this.open();
 		waitForRenderedElementsToBePresent(shopHomePage);
 		System.out.println($(shopHomePage).getText());
-		getJavascriptExecutorFacade().executeScript("window.scrollBy(0,200)");
+		scrollDown(200);
 	}
 
 	public void loginPage() {
