@@ -2,7 +2,7 @@ package com.taf.pages;
 
 import org.openqa.selenium.By;
 
-import com.taf.core.BasePageObject;
+import com.taf.utils.BasePageObject;
 import com.taf.utils.ConfigProperties;
 
 import net.serenitybdd.core.annotations.findby.FindBy;

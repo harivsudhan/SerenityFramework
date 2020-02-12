@@ -1,6 +1,6 @@
 package com.taf.pages;
 
-import com.taf.core.BasePageObject;
+import com.taf.utils.BasePageObject;
 
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.WebElementFacade;

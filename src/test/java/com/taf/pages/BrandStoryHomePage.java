@@ -3,16 +3,15 @@ package com.taf.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.taf.core.BasePageObject;
+import com.taf.utils.BasePageObject;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.annotations.findby.FindBy;
-import net.serenitybdd.core.pages.PageObject;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.DefaultUrl;
 
 @DefaultUrl("https://brandstory.in/")
-public class BrandStoryHomePage extends BasePageObject {
+public class BrandStoryHomePage extends BasePageObject{
 
 	@FindBy(tagName = "body")
 	WebElementFacade brandHomePage;
@@ -35,7 +34,7 @@ public class BrandStoryHomePage extends BasePageObject {
 	private String projectLink = "//*[text() = 'ProjectLink']";
 
 	public void waitUntilBrandStoryLoads() {
-		maximizeWindow();
+		this.maximizeWindow();
 		this.open();
 		waitForCondition().until(ExpectedConditions.visibilityOfAllElements(brandHomePage));
 		waitForCondition().until(ExpectedConditions.visibilityOf(contactUsLink));

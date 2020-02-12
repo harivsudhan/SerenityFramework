@@ -1,4 +1,4 @@
-package com.taf.core;
+package com.taf.utils;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
