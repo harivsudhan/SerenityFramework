@@ -125,10 +125,6 @@ public class BasePageObject extends PageObject {
 		return allTextPresent;
 	}
 
-	public void waitForAngularToComplete() {
-		waitForAngularRequestsToFinish();
-	}
-
 	public void waitforNonAngular(WebElementFacade element, long counter) {
 		waitForElementToBeClickable(element);
 		waitABit(counter);
