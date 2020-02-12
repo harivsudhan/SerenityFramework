@@ -1,3 +1,4 @@
+@regression
 Feature: Checkout cart
   Description: Checkout shirt and add to the Cart
 
