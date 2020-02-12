@@ -125,11 +125,6 @@ public class BasePageObject extends PageObject {
 		return allTextPresent;
 	}
 
-	public void waitforNonAngular(WebElementFacade element, long counter) {
-		waitForElementToBeClickable(element);
-		waitABit(counter);
-	}
-
 	public void WaitForPagetoLoad() throws InterruptedException {
 		for (int i = 0; i <= 100; i++) {
 			waitForWithRefresh();
