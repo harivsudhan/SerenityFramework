@@ -1,5 +1,7 @@
 package com.taf.pages;
 
+import org.openqa.selenium.By;
+
 import com.taf.utils.BasePageObject;
 
 import net.serenitybdd.core.annotations.findby.FindBy;
@@ -13,8 +15,7 @@ public class ProductPage extends BasePageObject {
 	@FindBy(name = "s")
 	WebElementFacade searchField;
 
-	@FindBy(xpath = "//a[contains(text() , 'blue denim super oversized')]")
-	WebElementFacade denimProductLink;
+	private String productLink = "//a[contains(text() , 'shirt')]";
 
 	@FindBy(id = "pa_color")
 	WebElementFacade productColorDropdown;
@@ -31,6 +32,9 @@ public class ProductPage extends BasePageObject {
 	}
 
 	public void clickProduct(String productName) {
+		productLink = productLink.replace("shirt", productName);
+		System.out.println(productLink);
+		WebElementFacade denimProductLink = $(By.xpath(productLink));
 		denimProductLink.waitUntilEnabled();
 		moveToElement(denimProductLink);
 		denimProductLink.click();
