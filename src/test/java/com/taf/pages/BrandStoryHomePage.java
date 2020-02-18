@@ -13,9 +13,6 @@ import net.thucydides.core.annotations.DefaultUrl;
 @DefaultUrl("https://brandstory.in/")
 public class BrandStoryHomePage extends BasePageObject{
 
-	@FindBy(tagName = "body")
-	WebElementFacade brandHomePage;
-
 	@FindBy(xpath = "//*[@href = 'contact-us']")
 	WebElementFacade contactUsLink;
 
@@ -36,7 +33,6 @@ public class BrandStoryHomePage extends BasePageObject{
 	public void waitUntilBrandStoryLoads() {
 		this.maximizeWindow();
 		this.open();
-		waitForCondition().until(ExpectedConditions.visibilityOfAllElements(brandHomePage));
 		waitForCondition().until(ExpectedConditions.visibilityOf(contactUsLink));
 	}
 
