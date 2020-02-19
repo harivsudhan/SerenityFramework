@@ -1,2 +1,4 @@
 /target/
 *.prefs
+/debug.log
+/reports
