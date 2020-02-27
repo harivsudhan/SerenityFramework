@@ -13,7 +13,6 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import net.serenitybdd.core.Serenity;
-import net.serenitybdd.core.pages.WebElementFacade;
 
 public class BMHAccountSelectionStep {
 	BMHCookiePage bmhCookiePage;
