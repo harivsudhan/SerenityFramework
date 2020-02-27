@@ -42,7 +42,7 @@ Feature: Account Selection Functionalities
   @AccountCounters
   Scenario Outline: Select the Account Number and verify the Counter/Amounts Screen 
    Given I search for "<Account Number>" in the Account Selection Screen 
-    When the "<Account Number>" in the Account Overview table is selected
+    When the Account Number in the Account Overview table is selected
     Then I should verify the "<Account Number>" in the Counter/Amounts screen 
     And I select random data for "Rate group" and click search
     Then I should verify the Counter amount result table
@@ -66,13 +66,13 @@ Feature: Account Selection Functionalities
   @AccountConvert 
   Scenario Outline: Select and Convert the Account Type and verify the Account Number
     Given I search for "<Account Number>" in the Account Selection Screen 
-    When the "<Account Number>" in the Account Overview table is selected 
+    When the Account Number in the Account Overview table is selected 
     Then I should verify the "<Account Number>" in the Convert screen
-    And I select random data for "Account Type" and click convert
-    Then I should verify the "Account Type" in the Account settings screen
-    And I click "complete" button
-    When the "<Account Number>" in the Account Overview table is clicked 
-    Then I should verify the "Account Type" in the Account Details popUp window 
+    And I select random data for Account Type and click convert
+    Then I should verify the Account Type in the Account settings screen
+    And I click complete button
+    When the accountNumber in the Account Overview table is clicked 
+    Then I should verify the Account Type in the Account Details popUp window 
     And I close the Account details popUp window 
   
     Examples: 

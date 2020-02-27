@@ -51,8 +51,14 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	@FindBy(id = "modify")
 	WebElementFacade modifyButton;
 
+	@FindBy(id = "modifyAccountType")
+	WebElementFacade convertButton;
+
 	@FindBy(id = "configure.account.account.number")
-	WebElementFacade modifyAccountNumber;
+	WebElementFacade modifyAccountNumberText;
+
+	@FindBy(id = "change.account.type.number")
+	WebElementFacade convertAccountNumberText;
 
 	@FindBy(id = "keyButton_view.abbAgreementIndicator")
 	WebElementFacade abbAgreementIndicator;
@@ -97,7 +103,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "blockDirectDebit_N")
 	WebElementFacade blockDirectDebit_No;
-	
+
 	@FindBy(id = "blockDirectDebit_J_label")
 	WebElementFacade blockDirectDebit_YesLabel;
 
@@ -109,7 +115,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "awOffsetAccountRequired_N")
 	WebElementFacade awOffsetAccountRequired_No;
-	
+
 	@FindBy(id = "awOffsetAccountRequired_J_label")
 	WebElementFacade awOffsetAccountRequired_YesLabel;
 
@@ -118,6 +124,12 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "finalizeButton")
 	WebElementFacade completeButton;
+
+	@FindBy(id = "accountType")
+	WebElementFacade accountTypeDropDown;
+	
+	@FindBy(id = "modifyAccountType2")
+	WebElementFacade accountTypeConvertButton;
 
 	@FindBy(id = "configure.account.abbcodecommercial")
 	WebElementFacade abbcodecommercialText;
@@ -139,12 +151,23 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "configure.account.awOffsetAccountRequired")
 	WebElementFacade awOffsetAccountRequiredText;
+	
+	@FindBy(id = "configure.account.account.type")
+	WebElementFacade accountTypeText;
+	
+	@FindBy(id = "change.ascription.accountType")
+	WebElementFacade accountTypePopUpScreenText;
+	
+	@FindBy(id = "button.close")
+	WebElementFacade popUpWindowCloseButon;
 
 	private LinkedHashMap<String, String> modifiedData;
 
 	private List<WebElement> dropdownListElements;
 
 	private List<String> dropdownList;
+
+	private String SelectedValue;
 
 	public BMHAccountSelectionPage() {
 		modifiedData = new LinkedHashMap<String, String>();
@@ -171,19 +194,40 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	public void modifyAccountNumberFromTable() {
 		chooseAccountNumber.waitUntilClickable().click();
-		modifyButton.waitUntilEnabled().click();
+	}
+	
+	public void clickAccountTypeConvertButton() {
+		accountTypeConvertButton.waitUntilClickable().click();
 	}
 
 	public String getAccountNumberFromPopUpWindow() {
 		return accountNumberDetails.waitUntilPresent().getText().replaceAll("\\s", "");
 	}
+	
+	public String getAccountTypeFromPopUpWindow() {
+		return accountTypePopUpScreenText.waitUntilPresent().getText().trim();
+	}
 
 	public String getAccountNumberFromAccountSettingsScreen() {
-		return modifyAccountNumber.waitUntilPresent().getText().replaceAll("\\s", "");
+		modifyButton.waitUntilEnabled().click();
+		return modifyAccountNumberText.waitUntilPresent().getText().replaceAll("\\s", "");
 	}
 	
+	public String getAccountTypeFromAccountSettingsScreen() {
+		return accountTypeText.waitUntilPresent().getText().trim();
+	}
+
+	public String getAccountNumberFromAccountConvertScreen() {
+		convertButton.waitUntilEnabled().click();
+		return convertAccountNumberText.waitUntilPresent().getText().replaceAll("\\s", "");
+	}
+
 	public void expandAccountPanel() {
-		accountPanel.waitUntilEnabled().click();	
+		accountPanel.waitUntilEnabled().click();
+	}
+	
+	public void closePopUpWindow() {
+		popUpWindowCloseButon.waitUntilEnabled().click();
 	}
 
 	public String expandVerifyAccountInfo(String accountInfoPanels) {
@@ -307,7 +351,8 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		String actualText = waitForCondition().until(ExpectedConditions.visibilityOf(element)).getText().trim();
 		String expectedText = modifiedData.get(option).trim();
 		System.out.println("Actual is " + actualText + " expected text is " + expectedText);
-		Assert.assertTrue("The modified data for " + option + " is wrongly displayed", actualText.endsWith(expectedText));
+		Assert.assertTrue("The modified data for " + option + " is wrongly displayed",
+				actualText.endsWith(expectedText));
 	}
 
 	public void expandVerifyAccountGeneralInfoPanel(String option) {
@@ -337,6 +382,22 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 		}
 
+	}
+
+	public String selectAccountType() {
+		
+		dropdownList = accountTypeDropDown.waitUntilEnabled().getSelectOptions();
+
+		for (String option : dropdownList) {
+			String elementText = option.trim();
+			System.out.println("The element text is " + elementText);
+			if (!elementText.contentEquals("")) {
+				accountTypeDropDown.selectByVisibleText(elementText);
+				SelectedValue = accountTypeDropDown.waitUntilEnabled().getSelectedVisibleTextValue().trim();
+				break;
+			}
+		}
+		return SelectedValue;
 	}
 
 }
