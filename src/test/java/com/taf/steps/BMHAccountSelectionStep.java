@@ -8,6 +8,7 @@ import com.taf.pages.BMHAccountSelectionPage;
 import com.taf.pages.BMHCookiePage;
 
 import cucumber.api.DataTable;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -17,6 +18,7 @@ import net.serenitybdd.core.pages.WebElementFacade;
 public class BMHAccountSelectionStep {
 	BMHCookiePage bmhCookiePage;
 	BMHAccountSelectionPage bmhAccountSelectionPage;
+	private String[] accountType;
 
 	@Given("^I launch the \"([^\"]*)\"$")
 	public void i_launch_the(String cookieUrl) {
@@ -57,7 +59,7 @@ public class BMHAccountSelectionStep {
 
 	@Then("^I close the Account details popUp window$")
 	public void i_close_the_Account_details_popUp_window() {
-		// Write code here that turns the phrase above into concrete actions
+		bmhAccountSelectionPage.closePopUpWindow();
 	}
 
 	@When("^the Account Number in the Account Overview table is selected$")
@@ -120,5 +122,37 @@ public class BMHAccountSelectionStep {
 			bmhAccountSelectionPage.expandVerifyAccountGeneralInfoPanel(option);
 		}
 	}
+	
+	@Then("^I should verify the \"([^\"]*)\" in the Convert screen$")
+	public void i_should_verify_the_in_the_Convert_screen(String accountNumber) {
+		String AccountNumber = bmhAccountSelectionPage.getAccountNumberFromAccountConvertScreen();
+		System.out.println("Expected - " + accountNumber + " actual " + AccountNumber);
+		Serenity.takeScreenshot();
+		Assert.assertTrue("Account number is not displayed correctly", AccountNumber.trim().contains(accountNumber));
+	    
+	}
+
+
+	@And("^I select random data for Account Type and click convert$")
+	public void i_select_random_data_for_and_click_convert() {
+	    accountType = bmhAccountSelectionPage.selectAccountType().split("-");
+	    bmhAccountSelectionPage.clickAccountTypeConvertButton();
+	}
+	
+	@Then("^I should verify the Account Type in the Account settings screen$")
+	public void i_should_verify_the_Account_Type_in_the_Account_settings_screen() {
+		String AccountType = bmhAccountSelectionPage.getAccountTypeFromAccountSettingsScreen();
+		System.out.println("Expected - " + accountType[1] + " actual " + AccountType);
+		Serenity.takeScreenshot();
+		Assert.assertTrue("Account Type is not displayed correctly", AccountType.trim().contains(accountType[1]));
+	}
+	
+	@Then("^I should verify the Account Type in the Account Details popUp window$")
+	public void i_should_verify_the_AccountType_in_the_Account_Details_popUp_window() {
+		String AccountType = bmhAccountSelectionPage.getAccountTypeFromPopUpWindow();
+		System.out.println("Expected - " + accountType + " actual " + AccountType);
+		Assert.assertTrue("Account Type is not displayed correctly", AccountType.trim().contains(accountType[1]));
+	}
+
 
 }
