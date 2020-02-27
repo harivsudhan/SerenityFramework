@@ -45,4 +45,16 @@ public class ConfigProperties {
 	public String getShopCartPassowrd( ) {
 		return this.getProperty("ShopCartPassword");
 	}
+	
+	public String getCookieUrl1( ) {
+		return this.getProperty("PrivateCookieUrl1");
+	}
+	
+	public String getCookieUrl2( ) {
+		return this.getProperty("BusinesssCookieUrl");
+	}
+	
+	public String getCookieUrl3( ) {
+		return this.getProperty("PrivateCookieUrl2");
+	}
 }

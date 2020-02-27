@@ -4,17 +4,18 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.taf.utils.BasePageObject;
+import com.taf.utils.ConfigProperties;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.annotations.findby.FindBy;
 import net.serenitybdd.core.pages.WebElementFacade;
 import net.thucydides.core.annotations.DefaultUrl;
 
-@DefaultUrl("https://brandstory.in/")
-public class BrandStoryHomePage extends BasePageObject{
+@DefaultUrl("http://rwa-ota-raboweblogin.rabobank.nl/")
+public class BMHCookiePage extends BasePageObject {
 
-	@FindBy(xpath = "//*[@href = 'contact-us']")
-	WebElementFacade contactUsLink;
+	@FindBy(tagName = "b")
+	WebElementFacade loggedinText;
 
 	@FindBy(xpath = "//a[contains(text(), 'DEVELOPMENT')]")
 	WebElementFacade developmentLink;
@@ -27,18 +28,30 @@ public class BrandStoryHomePage extends BasePageObject{
 
 	@FindBy(xpath = "//img[@alt = 'Digital Marketing Company in Bangalore']")
 	WebElementFacade imageLink;
-	
+
 	private String projectLink = "//*[text() = 'ProjectLink']";
 
-	public void waitUntilBrandStoryLoads() {
+	public void loadCookies(String cookieUrl) {
 		this.maximizeWindow();
-		this.open();
-		waitForCondition().until(ExpectedConditions.visibilityOf(contactUsLink));
-	}
+		switch (cookieUrl) {
 
-	public String getMailID() {
-		mailTo.waitUntilPresent();
-		return mailTo.getText();
+		case "PrivateCookieUrl1":
+			getDriver().get(ConfigProperties.getInstance().getCookieUrl1());
+			waitForTextToAppear(loggedinText, "Gebruiker LB\\3052.BMRC-particulie is succesvol ingelogd.");
+			break;
+
+		case "BusinesssCookieUrl":
+			getDriver().navigate().to(ConfigProperties.getInstance().getCookieUrl2());
+			waitForTextToAppear(loggedinText, "Gebruiker LB\\3052.BOB52LBBMRC004 is succesvol ingelogd.");
+			break;
+
+		case "PrivateCookieUrl2":
+			getDriver().navigate().to(ConfigProperties.getInstance().getCookieUrl3());
+			waitForTextToAppear(loggedinText, "Gebruiker LB\\3052.BMRC-particuli2 is succesvol ingelogd.");
+			break;
+
+		}
+
 	}
 
 	public void navigateToWebsite() {
