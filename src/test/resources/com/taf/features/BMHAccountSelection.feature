@@ -1,3 +1,4 @@
+@Sanity
 Feature: Account Selection Functionalities 
 
   Background: User is Logged In 
@@ -44,20 +45,22 @@ Feature: Account Selection Functionalities
    Given I search for "<Account Number>" in the Account Selection Screen 
     When the Account Number in the Account Overview table is selected
     Then I should verify the "<Account Number>" in the Counter/Amounts screen 
-    And I select random data for "Rate group" and click search
-    Then I should verify the Counter amount result table
-    And I select random data for "Transaction code on RA" and click search
-    Then I should verify the Counter amount result table
+#    And I select random data for "Rate group" and click search
+#    Then I should verify the Counter amount result table
+#    When I click "clear" button
+#    And I select random data for "Transaction code on RA" and click search
+#    Then I should verify the Counter amount result table
+#    When I click "clear" button
+#    And I select random data for "Starting date" and click search
+#    Then I should verify the Counter amount result table
+#    When I click "clear" button
+#    Then I should verify the Counter amount result table 
+#    When I click Next button
+#    Then I should verify the Counter amount result table
     And I select random data for "Note period" and click search
     Then I should verify the Counter amount result table
-    And I select random data for "Starting date" and click search
-    Then I should verify the Counter amount result table
-    When I click "clear" button
-    Then I should verify the Counter amount result table 
-    When I click "Next" button
-    Then I should verify the Counter amount result table
-    When I click "Download CSV" button
-    Then I should verify the downloaded CSV file contains the total rows displayed in the result table 
+    When I click Download CSV button
+#    Then I should verify the downloaded CSV file contains the total rows displayed in the result table 
   
     Examples: 
       | Account Number     | 

@@ -54,6 +54,9 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	@FindBy(id = "modifyAccountType")
 	WebElementFacade convertButton;
 
+	@FindBy(id = "pa_header")
+	WebElementFacade accountNumberHeaderText;
+
 	@FindBy(id = "configure.account.account.number")
 	WebElementFacade modifyAccountNumberText;
 
@@ -95,6 +98,16 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	private By affiliateInstitutionList = By
 			.xpath("//div[@id='searchbox_affiliateInstitution']//div[contains(@class, 'data-row')]");
 
+	@FindBy(id = "keyButton_view.tarifgroup")
+	WebElementFacade rateGroupButton;
+
+	private By rateGroupList = By.xpath("//div[@id='abb_commercial']//div[contains(@class, 'data-row')]");
+	
+	@FindBy(id = "keyButton_view.transTypeDesc")
+	WebElementFacade transactionCodeButton;
+
+	private By transactionCodeList = By.xpath("//div[@id='search_transactioncode']//div[contains(@class, 'data-row')]");
+
 	@FindBy(id = "accountStatementFrequency")
 	WebElementFacade statementFrequencyComboBox;
 
@@ -127,9 +140,12 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "accountType")
 	WebElementFacade accountTypeDropDown;
-	
+
 	@FindBy(id = "modifyAccountType2")
 	WebElementFacade accountTypeConvertButton;
+
+	@FindBy(xpath = "//*[@id='discontinue']/following::*[@id='counteramount']")
+	WebElementFacade counteramountButton;
 
 	@FindBy(id = "configure.account.abbcodecommercial")
 	WebElementFacade abbcodecommercialText;
@@ -151,15 +167,37 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "configure.account.awOffsetAccountRequired")
 	WebElementFacade awOffsetAccountRequiredText;
-	
+
 	@FindBy(id = "configure.account.account.type")
 	WebElementFacade accountTypeText;
-	
+
 	@FindBy(id = "change.ascription.accountType")
 	WebElementFacade accountTypePopUpScreenText;
 	
+	@FindBy(id = "counteramount.search.button")
+	WebElementFacade counterSearchButton;
+
 	@FindBy(id = "button.close")
 	WebElementFacade popUpWindowCloseButon;
+	
+	@FindBy(name = "counteramount.clear.button")
+	WebElementFacade counterClearButton;
+	
+	@FindBy(id = "settlementPeriod")
+	WebElementFacade settlementPeriodDropDown;
+	
+	@FindBy(id = "startdate")
+	WebElementFacade startdateTextField;
+	
+	@FindBy(id = "next.button")
+	WebElementFacade nextButton;
+	
+	@FindBy(id = "counteramount.download.csv.button")
+	WebElementFacade downloadCSVButton;
+	
+	private By counteramountTable = By.xpath("//*[@id='counter-amnt']//tr");
+	
+	private By counteramountTableFirstRowDate = By.xpath("(//*[@id='counter-amnt']//td[@class = 'firstcol'])[1]");
 
 	private LinkedHashMap<String, String> modifiedData;
 
@@ -191,11 +229,15 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	public void clickComplete() {
 		completeButton.waitUntilEnabled().click();
 	}
+	
+	public void clickCounterClearButton() {
+		counterClearButton.waitUntilEnabled().click();
+	}
 
 	public void modifyAccountNumberFromTable() {
 		chooseAccountNumber.waitUntilClickable().click();
 	}
-	
+
 	public void clickAccountTypeConvertButton() {
 		accountTypeConvertButton.waitUntilClickable().click();
 	}
@@ -203,7 +245,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	public String getAccountNumberFromPopUpWindow() {
 		return accountNumberDetails.waitUntilPresent().getText().replaceAll("\\s", "");
 	}
-	
+
 	public String getAccountTypeFromPopUpWindow() {
 		return accountTypePopUpScreenText.waitUntilPresent().getText().trim();
 	}
@@ -212,7 +254,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		modifyButton.waitUntilEnabled().click();
 		return modifyAccountNumberText.waitUntilPresent().getText().replaceAll("\\s", "");
 	}
-	
+
 	public String getAccountTypeFromAccountSettingsScreen() {
 		return accountTypeText.waitUntilPresent().getText().trim();
 	}
@@ -221,13 +263,42 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		convertButton.waitUntilEnabled().click();
 		return convertAccountNumberText.waitUntilPresent().getText().replaceAll("\\s", "");
 	}
+	
+	public void clickCounterSearchButton() {
+		counterSearchButton.waitUntilClickable().click();
+	}
+
+	public String getAccountNumberFromCounterAmountScreen() {
+		String accountNumberHeadertext = null;
+		try {
+			counteramountButton.waitUntilEnabled().click();
+			accountNumberHeadertext = accountNumberHeaderText.waitUntilPresent().getText().replaceAll("\\s", "");
+			return accountNumberHeadertext;
+		} catch (Exception e) {
+			Assert.fail("Unable to get AccountNumber From CounterAmount Screen " + e.getMessage());
+		}
+		return accountNumberHeadertext;
+	}
+	
+	public int getTotalCounterAmountTableRows() {
+		List<WebElement> tableElements = waitForCondition().until(ExpectedConditions.presenceOfAllElementsLocatedBy(counteramountTable));
+		return tableElements.size();
+	}
 
 	public void expandAccountPanel() {
 		accountPanel.waitUntilEnabled().click();
 	}
-	
+
 	public void closePopUpWindow() {
 		popUpWindowCloseButon.waitUntilEnabled().click();
+	}
+	
+	public void clickNextButton() {
+		nextButton.waitUntilEnabled().click();
+	}
+	
+	public void clickDownloadCSVButton() {
+		downloadCSVButton.waitUntilEnabled().click();
 	}
 
 	public String expandVerifyAccountInfo(String accountInfoPanels) {
@@ -279,6 +350,25 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		}
 
 	}
+	
+	private void selectRandomComboBoxValueCounterScreen(WebElementFacade comboBox, By locator, String comboBoxName) {
+
+		comboBox.waitUntilEnabled().click();
+		dropdownListElements = waitForCondition().until(ExpectedConditions.presenceOfAllElementsLocatedBy(locator));
+
+		for (WebElement option : dropdownListElements) {
+			String elementText = option.findElement(By.tagName("span")).getText().trim();
+			System.out.println("The element text is " + elementText);
+			if (!elementText.contentEquals("")) {
+				option.click();
+				modifiedData.put(comboBoxName, elementText);
+				System.out.println(modifiedData);
+				break;
+			}
+		}
+
+	}
+
 
 	public void modifyComboBoxAccountNumberData(String comboBox) throws InterruptedException {
 
@@ -317,6 +407,27 @@ public class BMHAccountSelectionPage extends BasePageObject {
 			modifiedData.put(comboBox, SelectedValue);
 			System.out.println(modifiedData);
 
+			break;
+		}
+	}
+
+	public void modifyComboBoxCounterAmountsData(String comboBox) throws InterruptedException {
+
+		switch (comboBox) {
+
+		case "Rate group":
+			selectRandomComboBoxValueCounterScreen(rateGroupButton, rateGroupList, comboBox);
+			break;
+		case "Transaction code on RA":
+			selectRandomComboBoxValueCounterScreen(transactionCodeButton, transactionCodeList, comboBox);
+			break;
+		case "Note period":
+			dropdownList = settlementPeriodDropDown.waitUntilEnabled().getSelectOptions();
+			selectFromComboBox(dropdownList, settlementPeriodDropDown);
+			break;
+		case "Starting date":
+			String dateText = waitForCondition().until(ExpectedConditions.visibilityOfElementLocated(counteramountTableFirstRowDate)).getText().trim();
+			clearSendKeysEnter(startdateTextField, dateText);
 			break;
 		}
 	}
@@ -385,15 +496,17 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	}
 
 	public String selectAccountType() {
-		
 		dropdownList = accountTypeDropDown.waitUntilEnabled().getSelectOptions();
-
+		return selectFromComboBox(dropdownList, accountTypeDropDown);
+	}
+	
+	private String selectFromComboBox(List<String> dropdownList, WebElementFacade elementDropDown) {
 		for (String option : dropdownList) {
 			String elementText = option.trim();
 			System.out.println("The element text is " + elementText);
 			if (!elementText.contentEquals("")) {
-				accountTypeDropDown.selectByVisibleText(elementText);
-				SelectedValue = accountTypeDropDown.waitUntilEnabled().getSelectedVisibleTextValue().trim();
+				elementDropDown.selectByVisibleText(elementText);
+				SelectedValue = elementDropDown.waitUntilEnabled().getSelectedVisibleTextValue().trim();
 				break;
 			}
 		}
