@@ -152,6 +152,51 @@ public class BMHAccountSelectionStep {
 		System.out.println("Expected - " + accountType + " actual " + AccountType);
 		Assert.assertTrue("Account Type is not displayed correctly", AccountType.trim().contains(accountType[1]));
 	}
+	
+	@Then("^I should verify the \"([^\"]*)\" in the Counter/Amounts screen$")
+	public void i_should_verify_the_in_the_Counter_Amounts_screen(String accountNumber) {
+		String AccountNumber = bmhAccountSelectionPage.getAccountNumberFromCounterAmountScreen();
+		System.out.println("Expected - " + accountNumber + " actual " + AccountNumber);
+		Serenity.takeScreenshot();
+		Assert.assertTrue("Account Type is not displayed correctly", AccountNumber.trim().contains(accountNumber));
+	}
+
+
+	@Then("^I select random data for \"([^\"]*)\" and click search$")
+	public void i_select_random_data_for_and_click_search(String option) {
+		try {
+			bmhAccountSelectionPage.modifyComboBoxCounterAmountsData(option);
+			bmhAccountSelectionPage.clickCounterSearchButton();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Then("^I should verify the Counter amount result table$")
+	public void i_should_verify_the_Counter_amount_result_table() {
+	    int totalRows = bmhAccountSelectionPage.getTotalCounterAmountTableRows();
+	    Assert.assertTrue("Counter Table is empty", totalRows > 1);
+	}
+
+	@When("^I click \"([^\"]*)\" button$")
+	public void i_click_button(String arg1) {
+	    bmhAccountSelectionPage.clickCounterClearButton();
+	}
+	
+	@And("^I click Next button$")
+	public void i_click_Next_button() {
+	    bmhAccountSelectionPage.clickNextButton();
+	}
+	
+	@When("^I click Download CSV button$")
+	public void i_click_Download_CSV_button() {
+	    bmhAccountSelectionPage.clickDownloadCSVButton();
+	}
+
+	@Then("^I should verify the downloaded CSV file contains the total rows displayed in the result table$")
+	public void i_should_verify_the_downloaded_CSV_file_contains_the_total_rows_displayed_in_the_result_table() {
+	    // Write code here that turns the phrase above into concrete actions
+	}
 
 
 }
