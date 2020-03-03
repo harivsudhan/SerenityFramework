@@ -1,5 +1,12 @@
 package com.taf.pages;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -9,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import com.taf.utils.BasePageObject;
+import com.taf.utils.ExcelUtilities;
 
 import net.serenitybdd.core.Serenity;
 import net.serenitybdd.core.annotations.findby.FindBy;
@@ -56,6 +64,9 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "pa_header")
 	WebElementFacade accountNumberHeaderText;
+	
+	@FindBy(id = "accountDescription")
+	WebElementFacade accountDescriptionTextField;
 
 	@FindBy(id = "configure.account.account.number")
 	WebElementFacade modifyAccountNumberText;
@@ -102,7 +113,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	WebElementFacade rateGroupButton;
 
 	private By rateGroupList = By.xpath("//div[@id='abb_commercial']//div[contains(@class, 'data-row')]");
-	
+
 	@FindBy(id = "keyButton_view.transTypeDesc")
 	WebElementFacade transactionCodeButton;
 
@@ -146,9 +157,12 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(xpath = "//*[@id='discontinue']/following::*[@id='counteramount']")
 	WebElementFacade counteramountButton;
-
+	
 	@FindBy(id = "configure.account.abbcodecommercial")
 	WebElementFacade abbcodecommercialText;
+
+	@FindBy(id = "change.ascription.accountTypeDescription")
+	WebElementFacade accountDescriptionText;
 
 	@FindBy(id = "configure.account.abbcodeoperations")
 	WebElementFacade abbcodeoperationsText;
@@ -173,30 +187,33 @@ public class BMHAccountSelectionPage extends BasePageObject {
 
 	@FindBy(id = "change.ascription.accountType")
 	WebElementFacade accountTypePopUpScreenText;
-	
+
 	@FindBy(id = "counteramount.search.button")
 	WebElementFacade counterSearchButton;
 
 	@FindBy(id = "button.close")
 	WebElementFacade popUpWindowCloseButon;
-	
+
 	@FindBy(name = "counteramount.clear.button")
 	WebElementFacade counterClearButton;
-	
+
 	@FindBy(id = "settlementPeriod")
 	WebElementFacade settlementPeriodDropDown;
-	
+
 	@FindBy(id = "startdate")
 	WebElementFacade startdateTextField;
-	
+
 	@FindBy(id = "next.button")
 	WebElementFacade nextButton;
-	
+
 	@FindBy(id = "counteramount.download.csv.button")
 	WebElementFacade downloadCSVButton;
-	
+
+	@FindBy(xpath = "//*[@id='counter-amnt']//tr")
+	List<WebElement> counterAmountTableRows;
+
 	private By counteramountTable = By.xpath("//*[@id='counter-amnt']//tr");
-	
+
 	private By counteramountTableFirstRowDate = By.xpath("(//*[@id='counter-amnt']//td[@class = 'firstcol'])[1]");
 
 	private LinkedHashMap<String, String> modifiedData;
@@ -206,6 +223,8 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	private List<String> dropdownList;
 
 	private String SelectedValue;
+
+	private String filePath = System.getProperty("user.dir") + File.separator + "downloadFiles";
 
 	public BMHAccountSelectionPage() {
 		modifiedData = new LinkedHashMap<String, String>();
@@ -229,7 +248,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	public void clickComplete() {
 		completeButton.waitUntilEnabled().click();
 	}
-	
+
 	public void clickCounterClearButton() {
 		counterClearButton.waitUntilEnabled().click();
 	}
@@ -263,7 +282,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		convertButton.waitUntilEnabled().click();
 		return convertAccountNumberText.waitUntilPresent().getText().replaceAll("\\s", "");
 	}
-	
+
 	public void clickCounterSearchButton() {
 		counterSearchButton.waitUntilClickable().click();
 	}
@@ -279,9 +298,10 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		}
 		return accountNumberHeadertext;
 	}
-	
+
 	public int getTotalCounterAmountTableRows() {
-		List<WebElement> tableElements = waitForCondition().until(ExpectedConditions.presenceOfAllElementsLocatedBy(counteramountTable));
+		List<WebElement> tableElements = waitForCondition()
+				.until(ExpectedConditions.presenceOfAllElementsLocatedBy(counteramountTable));
 		return tableElements.size();
 	}
 
@@ -292,13 +312,44 @@ public class BMHAccountSelectionPage extends BasePageObject {
 	public void closePopUpWindow() {
 		popUpWindowCloseButon.waitUntilEnabled().click();
 	}
-	
+
 	public void clickNextButton() {
 		nextButton.waitUntilEnabled().click();
 	}
 	
+	private void deleteExistingFiles() {
+		try {
+			Files.walk(Paths.get(filePath))
+			.filter(Files::isRegularFile)
+			.map(Path::toFile)
+			.forEach(File::delete);
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
 	public void clickDownloadCSVButton() {
+		deleteExistingFiles();
 		downloadCSVButton.waitUntilEnabled().click();
+	}
+	
+	public int getCounterTableRows() {
+		return waitForCondition().until(ExpectedConditions.visibilityOfAllElements(counterAmountTableRows))
+				.size();
+	}
+
+	public int getCSVFileRows() {
+		String fileName = null;
+		File dir = new File(filePath);
+		File[] dirContents = dir.listFiles();
+
+		for (int i = 0; i < dirContents.length; i++) {
+			fileName = dirContents[i].getName();
+			System.out.println("The name of the file is " + fileName);
+		}
+
+		ExcelUtilities xlUtils = new ExcelUtilities(filePath + File.separator + fileName);
+		return xlUtils.read();
 	}
 
 	public String expandVerifyAccountInfo(String accountInfoPanels) {
@@ -350,7 +401,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		}
 
 	}
-	
+
 	private void selectRandomComboBoxValueCounterScreen(WebElementFacade comboBox, By locator, String comboBoxName) {
 
 		comboBox.waitUntilEnabled().click();
@@ -368,7 +419,13 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		}
 
 	}
-
+	
+	public void modifyDescriptionOfAccount(String descData) {
+		accountDescriptionTextField.waitUntilVisible().click();
+		String timeStamp = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
+		clearSendKeys(accountDescriptionTextField, "Test"+timeStamp);
+		modifiedData.put(descData, "Test"+timeStamp);
+	}
 
 	public void modifyComboBoxAccountNumberData(String comboBox) throws InterruptedException {
 
@@ -426,7 +483,9 @@ public class BMHAccountSelectionPage extends BasePageObject {
 			selectFromComboBox(dropdownList, settlementPeriodDropDown);
 			break;
 		case "Starting date":
-			String dateText = waitForCondition().until(ExpectedConditions.visibilityOfElementLocated(counteramountTableFirstRowDate)).getText().trim();
+			String dateText = waitForCondition()
+					.until(ExpectedConditions.visibilityOfElementLocated(counteramountTableFirstRowDate)).getText()
+					.trim();
 			clearSendKeysEnter(startdateTextField, dateText);
 			break;
 		}
@@ -458,37 +517,41 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		System.out.println(modifiedData);
 	}
 
-	private void verifyGeneralInforText(WebElementFacade element, String option) {
+	private void verifyGeneralInfoText(WebElementFacade element, String option) {
 		String actualText = waitForCondition().until(ExpectedConditions.visibilityOf(element)).getText().trim();
 		String expectedText = modifiedData.get(option).trim();
 		System.out.println("Actual is " + actualText + " expected text is " + expectedText);
 		Assert.assertTrue("The modified data for " + option + " is wrongly displayed",
 				actualText.endsWith(expectedText));
 	}
+	
+	public void verifyAccountDescriptionText(String option) {
+		verifyGeneralInfoText(accountDescriptionText, option);
+	}
 
-	public void expandVerifyAccountGeneralInfoPanel(String option) {
+	public void verifyAccountGeneralInfoPanel(String option) {
 		switch (option) {
 
 		case "ABB code commercial":
-			verifyGeneralInforText(abbcodecommercialText, option);
+			verifyGeneralInfoText(abbcodecommercialText, option);
 			break;
 		case "ABB code operational":
-			verifyGeneralInforText(abbcodeoperationsText, option);
+			verifyGeneralInfoText(abbcodeoperationsText, option);
 			break;
 		case "Administrative location code":
-			verifyGeneralInforText(administrativelocationText, option);
+			verifyGeneralInfoText(administrativelocationText, option);
 			break;
 		case "Affiliated institution code":
-			verifyGeneralInforText(affiliateInstitutionText, option);
+			verifyGeneralInfoText(affiliateInstitutionText, option);
 			break;
 		case "Frequency of account statements":
-			verifyGeneralInforText(accountStatementFrequencyText, option);
+			verifyGeneralInfoText(accountStatementFrequencyText, option);
 			break;
 		case "Debt block":
-			verifyGeneralInforText(blockdirectdebitText, option);
+			verifyGeneralInfoText(blockdirectdebitText, option);
 			break;
 		case "AW contra account desired":
-			verifyGeneralInforText(awOffsetAccountRequiredText, option);
+			verifyGeneralInfoText(awOffsetAccountRequiredText, option);
 			break;
 
 		}
@@ -499,7 +562,7 @@ public class BMHAccountSelectionPage extends BasePageObject {
 		dropdownList = accountTypeDropDown.waitUntilEnabled().getSelectOptions();
 		return selectFromComboBox(dropdownList, accountTypeDropDown);
 	}
-	
+
 	private String selectFromComboBox(List<String> dropdownList, WebElementFacade elementDropDown) {
 		for (String option : dropdownList) {
 			String elementText = option.trim();

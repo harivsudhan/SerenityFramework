@@ -75,6 +75,11 @@ public class BMHAccountSelectionStep {
 		Assert.assertTrue("Account number is not displayed correctly", AccountNumber.trim().contains(accountNumber));
 	}
 
+	@Then("^I modify data for the \"([^\"]*)\" textfield$")
+	public void i_modify_data_for_the_below_textfield(String descData) {
+		bmhAccountSelectionPage.modifyDescriptionOfAccount(descData);
+	}
+
 	@Then("^I modify random data for the below combobox$")
 	public void i_modify_random_data_for_the_below_combobox(DataTable dt) {
 		List<String> list = dt.asList(String.class);
@@ -105,12 +110,17 @@ public class BMHAccountSelectionStep {
 
 	}
 
+	@Then("^I verify modified data for the \"([^\"]*)\" textfield$")
+	public void i_verify_modified_data_for_the_textfield(String textfield) {
+		bmhAccountSelectionPage.verifyAccountDescriptionText(textfield);
+	}
+
 	@Then("^I verify modified data for the below combobox$")
 	public void i_verify_modified_data_for_the_below_combobox(DataTable dt) {
 		bmhAccountSelectionPage.expandAccountPanel();
 		List<String> list = dt.asList(String.class);
 		for (String option : list) {
-			bmhAccountSelectionPage.expandVerifyAccountGeneralInfoPanel(option);
+			bmhAccountSelectionPage.verifyAccountGeneralInfoPanel(option);
 		}
 	}
 
@@ -118,26 +128,25 @@ public class BMHAccountSelectionStep {
 	public void i_verify_modified_data_for_the_below_radio_button(DataTable dt) {
 		List<String> list = dt.asList(String.class);
 		for (String option : list) {
-			bmhAccountSelectionPage.expandVerifyAccountGeneralInfoPanel(option);
+			bmhAccountSelectionPage.verifyAccountGeneralInfoPanel(option);
 		}
 	}
-	
+
 	@Then("^I should verify the \"([^\"]*)\" in the Convert screen$")
 	public void i_should_verify_the_in_the_Convert_screen(String accountNumber) {
 		String AccountNumber = bmhAccountSelectionPage.getAccountNumberFromAccountConvertScreen();
 		System.out.println("Expected - " + accountNumber + " actual " + AccountNumber);
 		Serenity.takeScreenshot();
 		Assert.assertTrue("Account number is not displayed correctly", AccountNumber.trim().contains(accountNumber));
-	    
-	}
 
+	}
 
 	@And("^I select random data for Account Type and click convert$")
 	public void i_select_random_data_for_and_click_convert() {
-	    accountType = bmhAccountSelectionPage.selectAccountType().split("-");
-	    bmhAccountSelectionPage.clickAccountTypeConvertButton();
+		accountType = bmhAccountSelectionPage.selectAccountType().split("-");
+		bmhAccountSelectionPage.clickAccountTypeConvertButton();
 	}
-	
+
 	@Then("^I should verify the Account Type in the Account settings screen$")
 	public void i_should_verify_the_Account_Type_in_the_Account_settings_screen() {
 		String AccountType = bmhAccountSelectionPage.getAccountTypeFromAccountSettingsScreen();
@@ -145,14 +154,14 @@ public class BMHAccountSelectionStep {
 		Serenity.takeScreenshot();
 		Assert.assertTrue("Account Type is not displayed correctly", AccountType.trim().contains(accountType[1]));
 	}
-	
+
 	@Then("^I should verify the Account Type in the Account Details popUp window$")
 	public void i_should_verify_the_AccountType_in_the_Account_Details_popUp_window() {
 		String AccountType = bmhAccountSelectionPage.getAccountTypeFromPopUpWindow();
 		System.out.println("Expected - " + accountType + " actual " + AccountType);
 		Assert.assertTrue("Account Type is not displayed correctly", AccountType.trim().contains(accountType[1]));
 	}
-	
+
 	@Then("^I should verify the \"([^\"]*)\" in the Counter/Amounts screen$")
 	public void i_should_verify_the_in_the_Counter_Amounts_screen(String accountNumber) {
 		String AccountNumber = bmhAccountSelectionPage.getAccountNumberFromCounterAmountScreen();
@@ -160,7 +169,6 @@ public class BMHAccountSelectionStep {
 		Serenity.takeScreenshot();
 		Assert.assertTrue("Account Type is not displayed correctly", AccountNumber.trim().contains(accountNumber));
 	}
-
 
 	@Then("^I select random data for \"([^\"]*)\" and click search$")
 	public void i_select_random_data_for_and_click_search(String option) {
@@ -174,29 +182,31 @@ public class BMHAccountSelectionStep {
 
 	@Then("^I should verify the Counter amount result table$")
 	public void i_should_verify_the_Counter_amount_result_table() {
-	    int totalRows = bmhAccountSelectionPage.getTotalCounterAmountTableRows();
-	    Assert.assertTrue("Counter Table is empty", totalRows > 1);
+		int totalRows = bmhAccountSelectionPage.getTotalCounterAmountTableRows();
+		Assert.assertTrue("Counter Table is empty", totalRows > 1);
 	}
 
 	@When("^I click \"([^\"]*)\" button$")
 	public void i_click_button(String arg1) {
-	    bmhAccountSelectionPage.clickCounterClearButton();
+		bmhAccountSelectionPage.clickCounterClearButton();
 	}
-	
+
 	@And("^I click Next button$")
 	public void i_click_Next_button() {
-	    bmhAccountSelectionPage.clickNextButton();
+		bmhAccountSelectionPage.clickNextButton();
 	}
-	
+
 	@When("^I click Download CSV button$")
 	public void i_click_Download_CSV_button() {
-	    bmhAccountSelectionPage.clickDownloadCSVButton();
+		bmhAccountSelectionPage.clickDownloadCSVButton();
 	}
 
 	@Then("^I should verify the downloaded CSV file contains the total rows displayed in the result table$")
 	public void i_should_verify_the_downloaded_CSV_file_contains_the_total_rows_displayed_in_the_result_table() {
-	    // Write code here that turns the phrase above into concrete actions
+		int counterTableRows = bmhAccountSelectionPage.getCounterTableRows();
+		int csvCounterTableRows = bmhAccountSelectionPage.getCSVFileRows();
+		Assert.assertTrue("Counter Table Rows is " + counterTableRows + " but the downloaded CSV file rows is "
+				+ csvCounterTableRows, counterTableRows == csvCounterTableRows);
 	}
-
 
 }
