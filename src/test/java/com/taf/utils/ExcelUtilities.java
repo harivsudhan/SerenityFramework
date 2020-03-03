@@ -1,9 +1,13 @@
 package com.taf.utils;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -11,6 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Assert;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 public class ExcelUtilities {
 	public FileInputStream fis = null;
@@ -21,12 +28,21 @@ public class ExcelUtilities {
 	private int col_Num;
 	private int rowNum;
 	private String sheetName;
+	private CSVReader reader;
 
 	public ExcelUtilities(String xlFilePath, String sheetName) throws Exception {
 		fis = new FileInputStream(xlFilePath);
 		workbook = new XSSFWorkbook(fis);
 		this.sheetName = sheetName;
 		fis.close();
+	}
+
+	public ExcelUtilities(String csvFilePath) {
+		try {
+			reader = new CSVReader(new FileReader(csvFilePath));
+		} catch (FileNotFoundException e) {
+			Assert.fail(e.getMessage());
+		}
 	}
 
 	public int getRowCount() {
@@ -54,7 +70,7 @@ public class ExcelUtilities {
 					break;
 				}
 			}
-			
+
 			for (int i = 0; i < rowCount; i++) {
 				row = sheet.getRow(i);
 				String cellValue = row.getCell(0).toString().trim();
@@ -87,4 +103,27 @@ public class ExcelUtilities {
 		}
 		return "";
 	}
+
+	public int read() {
+		int size = 0;
+		try {
+			List<String[]> myEntries = reader.readAll();
+			System.out.println("The length of the file is " + myEntries.size());
+			size = myEntries.size();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null) {
+				try {
+					reader.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return size;
+	}
+
 }

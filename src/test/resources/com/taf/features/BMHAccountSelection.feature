@@ -22,14 +22,16 @@ Feature: Account Selection Functionalities
   Scenario Outline: Select and Modify the Account Number and verify the modified Account Details 
    Given I search for "<Account Number>" in the Account Selection Screen 
     When the Account Number in the Account Overview table is selected 
-    Then I should verify the "<Account Number>" in the Account settings screen 
+    Then I should verify the "<Account Number>" in the Account settings screen
+    And I modify data for the "Omschrijving rekening" textfield
     And I modify random data for the below combobox
     | ABB code commercial | ABB code operational | Administrative location code | Affiliated institution code | Frequency of account statements | 
     And I modify the random data for the below radio button
     | Debt block | AW contra account desired | 
     When I click complete button
     And the accountNumber in the Account Overview table is clicked  
-    Then I should verify the "<Account Number>" in the Account Details popUp window 
+    Then I should verify the "<Account Number>" in the Account Details popUp window
+    And I verify modified data for the "Omschrijving rekening" textfield
     And I verify modified data for the below combobox
     | ABB code commercial | ABB code operational | Administrative location code | Affiliated institution code | Frequency of account statements | 
     And I verify modified data for the below radio button
@@ -45,22 +47,22 @@ Feature: Account Selection Functionalities
    Given I search for "<Account Number>" in the Account Selection Screen 
     When the Account Number in the Account Overview table is selected
     Then I should verify the "<Account Number>" in the Counter/Amounts screen 
-#    And I select random data for "Rate group" and click search
-#    Then I should verify the Counter amount result table
-#    When I click "clear" button
-#    And I select random data for "Transaction code on RA" and click search
-#    Then I should verify the Counter amount result table
-#    When I click "clear" button
-#    And I select random data for "Starting date" and click search
-#    Then I should verify the Counter amount result table
-#    When I click "clear" button
-#    Then I should verify the Counter amount result table 
-#    When I click Next button
-#    Then I should verify the Counter amount result table
+    And I select random data for "Rate group" and click search
+    Then I should verify the Counter amount result table
+    When I click "clear" button
+    And I select random data for "Transaction code on RA" and click search
+    Then I should verify the Counter amount result table
+    When I click "clear" button
+    And I select random data for "Starting date" and click search
+    Then I should verify the Counter amount result table
+    When I click "clear" button
+    Then I should verify the Counter amount result table 
+    When I click Next button
+    Then I should verify the Counter amount result table
     And I select random data for "Note period" and click search
     Then I should verify the Counter amount result table
     When I click Download CSV button
-#    Then I should verify the downloaded CSV file contains the total rows displayed in the result table 
+    Then I should verify the downloaded CSV file contains the total rows displayed in the result table 
   
     Examples: 
       | Account Number     | 
